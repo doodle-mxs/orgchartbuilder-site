@@ -1,0 +1,33 @@
+id,name,title,manager_id,department,location
+1,Maria Jensen,Chief Executive Officer,,Executive,Copenhagen
+2,Tom Becker,Chief Technology Officer,1,Engineering,Berlin
+3,Priya Nair,Chief Financial Officer,1,Finance,London
+4,Lucas Moreau,VP Sales,1,Sales,Paris
+5,Sofia Rossi,Head of People,1,People,Copenhagen
+6,Daniel Kim,Engineering Manager – Platform,2,Engineering,Berlin
+7,Hannah Schulz,Engineering Manager – Product,2,Engineering,Berlin
+8,Omar Haddad,Head of Design,2,Design,Amsterdam
+9,Lena Fischer,Senior Engineer,6,Engineering,Berlin
+10,Jonas Weber,Engineer,6,Engineering,Berlin
+11,Aisha Bello,Site Reliability Engineer,6,Engineering,Remote
+12,Ben Carter,Engineer,6,Engineering,Remote
+13,Mei Chen,Senior Engineer,7,Engineering,Berlin
+14,Arjun Mehta,Engineer,7,Engineering,Berlin
+15,Clara Novak,Engineer,7,Engineering,Prague
+16,Felix Braun,QA Engineer,7,Engineering,Berlin
+17,Nora Lind,Engineer,7,Engineering,Remote
+18,Ella Visser,Product Designer,8,Design,Amsterdam
+19,Sam Okafor,UX Researcher,8,Design,Amsterdam
+20,James Wright,Finance Manager,3,Finance,London
+21,Olivia Brown,Accountant,20,Finance,London
+22,Noah Patel,Financial Analyst,20,Finance,London
+23,Chloé Dubois,Sales Manager – EMEA,4,Sales,Paris
+24,Mateo García,Sales Manager – Americas,4,Sales,New York
+25,Julie Martin,Account Executive,23,Sales,Paris
+26,Hugo Lefèvre,Account Executive,23,Sales,Paris
+27,Anna Kowalska,Account Executive,23,Sales,Warsaw
+28,Emily Davis,Account Executive,24,Sales,New York
+29,Lucas Silva,Sales Development Rep,24,Sales,New York
+30,Ida Holm,People Partner,5,People,Copenhagen
+31,Karl Andersen,Recruiter,5,People,Copenhagen
+32,Freya Nielsen,Executive Assistant,1,Executive,Copenhagen

@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Org Chart Builder</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<aside class="panel">
+  <header>
+    <h1>Org Chart Builder</h1>
+    <p>CSV in, tidy chart out, finish in draw.io.</p>
+  </header>
+
+  <section>
+    <h2>Data</h2>
+    <label class="file-btn">Choose CSV file…<input type="file" id="file" accept=".csv,.tsv,.txt,text/csv"></label>
+    <p class="hint" id="fileInfo">Or drop a CSV anywhere on the page.</p>
+    <label class="check"><input type="checkbox" data-key="rememberCsv"> Remember this CSV in this browser</label>
+    <p class="hint" id="rememberNote"></p>
+    <button class="link" id="loadSample">Load sample data</button>
+    <div class="grid2">
+      <label>ID column<select data-key="idCol" data-columns="optional"></select></label>
+      <label>Manager column<select data-key="managerCol" data-columns="optional"></select></label>
+      <label>Name column<select data-key="nameCol" data-columns="optional"></select></label>
+      <label>Order reports by<select data-key="sortBy" data-columns="csv-order"></select></label>
+    </div>
+    <ul class="warnings" id="warnings"></ul>
+  </section>
+
+  <section>
+    <h2>Layout</h2>
+    <div class="presets">
+      <button data-preset="classic" title="Everyone side by side">Classic</button>
+      <button data-preset="compact" title="Small teams stacked in two columns">Compact</button>
+      <button data-preset="lists" title="Teams as vertical lists">Team lists</button>
+      <button data-preset="sideways" title="Left to right">Sideways</button>
+    </div>
+    <div class="grid2">
+      <label>Direction
+        <select data-key="orientation">
+          <option value="TB">Top → down</option>
+          <option value="LR">Left → right</option>
+        </select>
+      </label>
+      <label>Stack teams
+        <select data-key="stack" id="stackSel">
+          <option value="off">Off</option>
+          <option value="1">1 column</option>
+          <option value="2">2 columns</option>
+        </select>
+      </label>
+      <label>Stack from team size<input type="number" min="1" max="99" data-key="stackMin"></label>
+      <label>Levels shown<select data-key="maxDepth" id="levelSel"></select></label>
+    </div>
+    <label>Start from
+      <select data-key="rootId" id="rootSel"></select>
+    </label>
+    <p class="hint">Tip: click a manager in the chart to show only their branch.</p>
+  </section>
+
+  <section>
+    <h2>Size &amp; spacing</h2>
+    <label class="range">Card width <output></output><input type="range" min="100" max="320" step="10" data-key="cardW"></label>
+    <label class="range">Card height <output></output><input type="range" min="32" max="140" step="2" data-key="cardH"></label>
+    <label class="range">Space between cards <output></output><input type="range" min="8" max="120" step="2" data-key="hGap"></label>
+    <label class="range">Space between levels <output></output><input type="range" min="16" max="160" step="2" data-key="vGap"></label>
+    <label class="range">Font size <output></output><input type="range" min="8" max="20" step="1" data-key="fontSize"></label>
+  </section>
+
+  <section>
+    <h2>Cards</h2>
+    <div class="grid2">
+      <label>Line 1 (bold)<select data-key="line1" data-columns="optional"></select></label>
+      <label>Line 2<select data-key="line2" data-columns="optional"></select></label>
+      <label>Line 3<select data-key="line3" data-columns="optional"></select></label>
+      <label>Style
+        <select data-key="cardStyle">
+          <option value="tinted">Tinted</option>
+          <option value="outline">Outline</option>
+          <option value="solid">Solid</option>
+        </select>
+      </label>
+      <label>Colour by<select data-key="colorBy" data-columns="optional"></select></label>
+      <label>Colour<input type="color" data-key="baseColor" id="baseColor"></label>
+    </div>
+    <label class="check"><input type="checkbox" data-key="rounded"> Rounded corners</label>
+    <ul class="legend" id="legend"></ul>
+  </section>
+
+  <section>
+    <h2>Export</h2>
+    <button class="primary" id="openDrawio">Open in draw.io</button>
+    <div class="grid3">
+      <button id="dlDrawio">.drawio</button>
+      <button id="dlSvg">SVG</button>
+      <button id="dlPng">PNG</button>
+    </div>
+    <p class="hint">Cards keep their CSV data (Edit Data in draw.io) and connectors stay attached when you move cards.</p>
+    <button class="link" id="reset">Reset all settings</button>
+  </section>
+</aside>
+
+<main>
+  <div class="toolbar">
+    <button id="fit" title="Fit to screen">Fit</button>
+    <button id="zoomOut" title="Zoom out">−</button>
+    <span id="zoomLabel">100%</span>
+    <button id="zoomIn" title="Zoom in">+</button>
+    <span class="spacer"></span>
+    <span id="summary"></span>
+    <button id="showAll" hidden>Show everyone</button>
+  </div>
+  <div class="stage" id="stage"><div id="chart"></div></div>
+  <div class="drop-overlay" id="dropOverlay">Drop CSV to load</div>
+</main>
+
+<dialog id="drawioDialog">
+  <h3>Open in draw.io?</h3>
+  <p>The chart, including everything shown on the cards, is passed to draw.io inside the link.
+    It is not sent to draw.io's servers, but the full link is saved in your browser history,
+    and synced to the cloud if browser sync is on.</p>
+  <p>For confidential data, download the <b>.drawio</b> file and open it in the
+    <a href="https://www.drawio.com/" target="_blank" rel="noopener">draw.io desktop app</a> instead.</p>
+  <label class="check"><input type="checkbox" id="drawioDontAsk"> Don't ask again</label>
+  <div class="dialog-actions">
+    <button id="drawioCancel">Cancel</button>
+    <button id="drawioDownload">Download .drawio</button>
+    <button class="primary" id="drawioOpen">Open in draw.io</button>
+  </div>
+</dialog>
+
+<script src="js/csv.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/render.js"></script>
+<script src="js/drawio.js"></script>
+<script src="js/sample.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
